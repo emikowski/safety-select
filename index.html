@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>GVS Safety Select</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#0079b5" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Safety Select" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700;900&family=Sora:wght@400;500;600;700;800&family=Archivo:wght@400;500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ─────────────────────────  TEMA / TOKENS  ───────────────────────── */
+:root{
+  --font-head:"Titillium Web",system-ui,sans-serif; --font-body:"Titillium Web",system-ui,sans-serif;
+  --radius:20px; --radius-sm:13px;
+  --maxw:920px;
+  --primary:#009fe3; --on-primary:#ffffff;
+}
+/* GVS — claro, corporativo (azul #009FE3 + cinza #808B95) — PADRÃO */
+[data-theme="gvs"]{
+  --bg:#eaf0f4; --bg2:#e2eaf0; --surface:#ffffff; --surface2:#f1f6f9;
+  --text:#27333d; --dim:#69767f; --line:rgba(39,51,61,.12); --line2:rgba(39,51,61,.22);
+  --accent:#0079b5; --on-accent:#ffffff; --danger:#d83a3f;
+  --shadow:0 2px 14px rgba(20,45,65,.07); --shadow-lg:0 30px 70px rgba(20,45,65,.16);
+  --media-bg:linear-gradient(150deg,#eef6fc,#e2eef7); --media-ic:var(--primary); --tick:var(--primary);
+}
+/* GVS escuro */
+[data-theme="midnight"]{
+  --bg:#0b1a26; --bg2:#0f2433; --surface:#15303f; --surface2:#1d3e50;
+  --text:#eaf4fa; --dim:#92aabb; --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.18);
+  --accent:#00b4ff; --on-accent:#04222e; --danger:#ff6b6b;
+  --shadow:0 2px 12px rgba(0,0,0,.34); --shadow-lg:0 26px 64px rgba(0,0,0,.55);
+  --media-bg:linear-gradient(150deg,#1d3e50,#142f3e); --media-ic:var(--primary); --tick:var(--primary);
+}
+/* GVS vibrante — alto contraste, tiles azuis */
+[data-theme="bold"]{
+  --bg:#ffffff; --bg2:#f2f7fb; --surface:#ffffff; --surface2:#eef5fa;
+  --text:#08151f; --dim:#566872; --line:rgba(8,21,31,.14); --line2:rgba(8,21,31,.3);
+  --accent:#0079b5; --on-accent:#ffffff; --danger:#d83a3f;
+  --shadow:0 3px 16px rgba(8,40,65,.1); --shadow-lg:0 30px 70px rgba(8,40,65,.2);
+  --media-bg:linear-gradient(145deg,#00aef0,#0079b5); --media-ic:#ffffff; --tick:var(--primary);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--font-body); background:var(--bg); color:var(--text);
+  overflow:hidden; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none}
+img{display:block;max-width:100%}
+::selection{background:var(--primary);color:var(--on-primary)}
+
+/* ─────────────────────────  APP SHELL  ───────────────────────── */
+#root{height:100dvh;width:100vw}
+.g-app{height:100dvh;display:flex;flex-direction:column;background:
+  radial-gradient(120% 90% at 50% -10%, var(--bg2), var(--bg) 60%);}
+.g-main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.g-main::-webkit-scrollbar{display:none}
+.g-screen{min-height:100%;display:flex;flex-direction:column}
+.g-pad{padding:28px clamp(20px,4vw,52px) 24px;max-width:var(--maxw);width:100%;margin:0 auto}
+
+/* ─────────────────────────  CHROME  ───────────────────────── */
+.g-chrome{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px clamp(18px,3.5vw,40px);border-bottom:1px solid var(--line);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);position:relative;z-index:30}
+.g-logo{display:flex;flex-direction:column;line-height:1;align-items:flex-start}
+.g-logo-img{height:38px;width:auto;display:block}
+.g-logo-sub{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.g-chrome-right{display:flex;align-items:center;gap:10px}
+.g-icbtn{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  color:var(--text);background:var(--surface);border:1px solid var(--line)}
+.g-icbtn:active{transform:scale(.94)}
+.g-lang{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;gap:2px}
+.g-lang-b{padding:8px 12px;border-radius:10px;font-weight:700;font-size:14px;color:var(--dim);letter-spacing:.04em}
+.g-lang-b.on{background:var(--primary);color:var(--on-primary)}
+.g-cart{position:relative;width:54px;height:48px;border-radius:14px;display:grid;place-items:center;
+  background:var(--surface);border:1px solid var(--line);color:var(--text)}
+.g-cart:active{transform:scale(.94)}
+.g-cart-badge{position:absolute;top:-7px;right:-7px;min-width:24px;height:24px;padding:0 6px;border-radius:12px;
+  background:var(--accent);color:var(--on-accent);font-weight:800;font-size:13px;display:grid;place-items:center;
+  box-shadow:var(--shadow)}
+
+/* back bar */
+.g-backbar{max-width:var(--maxw);width:100%;margin:0 auto;padding:18px clamp(20px,4vw,52px) 0}
+.g-back{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:16px;color:var(--dim);
+  padding:8px 4px}
+.g-back:active{color:var(--text)}
+
+/* ─────────────────────────  HEADINGS  ───────────────────────── */
+.g-stephead{margin-bottom:22px}
+.g-kicker{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--primary);margin-bottom:10px}
+.g-kicker.on-dark{color:var(--primary)}
+.g-h1{font-family:var(--font-head);font-weight:700;font-size:clamp(28px,5.4vw,42px);line-height:1.08;
+  letter-spacing:-.02em;text-wrap:balance}
+.g-h2{font-family:var(--font-head);font-weight:700;font-size:24px;letter-spacing:-.01em}
+.g-sub{font-size:clamp(16px,2.4vw,19px);color:var(--dim);margin-top:12px;max-width:60ch;line-height:1.45}
+.g-sub.sm{font-size:14px;margin-top:4px}
+.g-display{font-family:var(--font-head);font-weight:800;font-size:clamp(40px,9vw,76px);line-height:.98;
+  letter-spacing:-.03em;margin:14px 0 6px;text-wrap:balance}
+
+/* ─────────────────────────  ATTRACT  ───────────────────────── */
+.g-attract{position:relative;align-items:center;justify-content:center;text-align:center;
+  padding:48px;cursor:pointer;overflow:hidden;height:100dvh}
+.g-attract-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.g-float{position:absolute;color:var(--primary);opacity:.13;animation-timing-function:ease-in-out;animation-iteration-count:infinite;will-change:transform}
+@keyframes gfloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-30px) rotate(5deg)}}
+@keyframes gdrift{0%,100%{transform:translate(0,0) rotate(-6deg)}25%{transform:translate(24px,-20px) rotate(4deg)}50%{transform:translate(8px,-36px) rotate(8deg)}75%{transform:translate(-20px,-16px) rotate(-3deg)}}
+@keyframes gspin{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.12)}100%{transform:rotate(360deg) scale(1)}}
+.g-blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.42;animation-timing-function:ease-in-out;animation-iteration-count:infinite;will-change:transform}
+.g-blob.b1{width:48vmax;height:48vmax;top:-16vmax;left:-12vmax;background:radial-gradient(circle,var(--primary),transparent 68%);animation:gblob1 24s infinite}
+.g-blob.b2{width:42vmax;height:42vmax;bottom:-14vmax;right:-10vmax;background:radial-gradient(circle,var(--accent),transparent 68%);animation:gblob2 31s infinite}
+.g-blob.b3{width:32vmax;height:32vmax;top:28%;left:54%;background:radial-gradient(circle,var(--primary),transparent 70%);animation:gblob1 27s infinite reverse}
+@keyframes gblob1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(8vmax,6vmax) scale(1.16)}}
+@keyframes gblob2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-7vmax,-5vmax) scale(1.1)}}
+.g-attract-in{position:relative;z-index:2;max-width:760px;display:flex;flex-direction:column;align-items:center}
+.g-attract-logo-img{height:clamp(60px,12vw,100px);width:auto;margin-bottom:26px;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.12))}
+.g-attract-sub{font-size:clamp(17px,2.6vw,21px);color:var(--dim);margin:8px 0 40px;max-width:46ch;line-height:1.5}
+.g-attract-cta{position:relative;display:inline-flex;align-items:center;gap:12px;
+  font-family:var(--font-head);font-weight:700;font-size:clamp(18px,2.6vw,22px);
+  background:var(--primary);color:var(--on-primary);padding:20px 38px;border-radius:999px;box-shadow:var(--shadow-lg)}
+.g-pulse{position:absolute;inset:0;border-radius:999px;border:2px solid var(--primary);animation:gpulse 2.2s ease-out infinite}
+@keyframes gpulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+.g-attract-foot{position:absolute;bottom:30px;left:0;right:0;text-align:center;color:var(--dim);
+  font-size:13px;letter-spacing:.16em;text-transform:uppercase;z-index:2}
+.g-attract-lang{position:absolute;top:28px;right:28px;z-index:3;box-shadow:var(--shadow)}
+/* attract variants */
+.g-attract.style-bold .g-display{font-size:clamp(48px,12vw,104px)}
+.g-attract.style-bold .g-float{opacity:.2}
+.g-attract.style-bold .g-blob{opacity:.5}
+.g-attract.style-minimal .g-attract-bg{display:none}
+.g-attract.style-minimal{background:var(--bg)}
+
+/* ─────────────────────────  BIG CARDS (home/linhas)  ───────────────────────── */
+.g-home-grid{display:grid;gap:18px;grid-template-columns:1fr;margin-top:8px}
+.g-line-grid{display:grid;gap:16px;grid-template-columns:1fr}
+.g-bigcard{position:relative;display:flex;align-items:center;gap:22px;text-align:left;width:100%;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 26px;
+  box-shadow:var(--shadow);transition:transform .15s,border-color .15s,box-shadow .15s}
+.g-bigcard:active{transform:scale(.985)}
+.g-bigcard.accent{border-color:color-mix(in srgb,var(--primary) 55%,var(--line))}
+.g-bigcard-ic{flex-shrink:0;width:108px;height:108px;border-radius:20px;display:grid;place-items:center;
+  background:var(--media-bg);color:var(--media-ic,var(--primary))}
+.g-bigcard.accent .g-bigcard-ic{color:var(--primary)}
+.g-bigcard-ic.has-img{background:#fff;overflow:hidden}
+.g-bigcard-img{width:100%;height:100%;object-fit:contain;padding:8px}
+.g-bigcard-tx{display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
+.g-bigcard-t{font-family:var(--font-head);font-weight:700;font-size:clamp(20px,3.2vw,26px);line-height:1.12;letter-spacing:-.01em}
+.g-bigcard-s{font-size:15.5px;color:var(--dim);line-height:1.35}
+.g-bigcard-go{flex-shrink:0;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface2);color:var(--dim)}
+.g-badge{position:absolute;top:14px;right:14px;background:var(--primary);color:var(--on-primary);
+  font-weight:800;font-size:14px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+
+/* ─────────────────────────  ATIVIDADES  ───────────────────────── */
+.g-act-grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+.g-act{position:relative;display:block;aspect-ratio:1/1;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
+  transition:transform .15s,border-color .15s,box-shadow .15s;padding:0;text-align:left}
+.g-act:hover{border-color:color-mix(in srgb,var(--primary) 55%,var(--line));transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.g-act:active{transform:scale(.97)}
+.g-act-media{position:absolute;inset:0;background:#0a1c24}
+.g-act-vid{width:100%;height:100%;object-fit:cover;display:block}
+.g-act-ic{position:absolute;inset:0;display:grid;place-items:center;color:var(--primary)}
+.g-act.no-media .g-act-media{background:linear-gradient(150deg,#13323f,#0a1c24)}
+.g-act-grad{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(3,12,18,.92) 0%,rgba(3,12,18,.42) 38%,rgba(3,12,18,0) 66%)}
+.g-act-name{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:16px 16px 15px;
+  font-family:var(--font-head);font-weight:700;font-size:clamp(16px,2.4vw,21px);color:#fff;line-height:1.12;
+  text-shadow:0 1px 10px rgba(0,0,0,.55)}
+
+/* ─────────────────────────  PRODUCT CARDS  ───────────────────────── */
+.g-prod-grid{display:grid;gap:16px;grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr}
+.g-prod-grid.layout-list{grid-template-columns:1fr}
+.g-prod{position:relative;display:grid;grid-template-rows:auto 1fr auto;text-align:left;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
+  transition:transform .15s,border-color .15s;min-height:100%}
+.g-prod:active{transform:scale(.985)}
+.g-prod.on{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary),var(--shadow)}
+.g-prod-grid.layout-list .g-prod{display:flex;flex-direction:row;align-items:stretch}
+.g-media{position:relative;aspect-ratio:16/10;background:#fff;color:var(--media-ic,var(--primary));flex-shrink:0;overflow:hidden}
+.g-media.big{aspect-ratio:16/11}
+.g-prod-grid.layout-list .g-media{aspect-ratio:1/1;width:140px;flex-shrink:0}
+.g-media-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:clamp(10px,4%,18px)}
+.g-media>svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.g-media:not(:has(.g-media-img)){background:var(--media-bg)}
+.g-prod-body{padding:16px 18px 10px;flex:1;display:flex;flex-direction:column;gap:5px}
+.g-prod-code{font-family:var(--font-head);font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--primary)}
+.g-prod-name{font-family:var(--font-head);font-weight:600;font-size:18.5px;line-height:1.18;letter-spacing:-.01em;min-height:2.36em}
+.g-prod-desc{font-size:14px;color:var(--dim);line-height:1.4}
+.g-prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px 16px;margin-top:auto}
+.g-vbtn{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--dim)}
+.g-prod-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-head);font-weight:700;font-size:15px;
+  background:var(--surface2);color:var(--text);padding:11px 16px;border-radius:12px}
+.g-prod-cta.on{background:var(--primary);color:var(--on-primary)}
+.g-prod-tick{position:absolute;top:12px;left:12px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--primary);color:var(--on-primary);box-shadow:var(--shadow)}
+.g-prod-cert{font-size:12px;color:var(--dim);margin-top:5px}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* família + peças/consumíveis */
+.g-fam{margin-bottom:24px}
+.g-fam-h{font-family:var(--font-head);font-weight:700;font-size:14.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dim);margin:4px 0 14px;display:flex;align-items:center;gap:12px}
+.g-fam-h.mt{margin-top:8px}
+.g-fam-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.g-parts{margin-top:8px}
+.g-parts-toggle{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:700;font-size:16px;
+  color:var(--text);background:var(--surface);border:1.5px dashed var(--line2);border-radius:14px;padding:15px 22px;transition:.15s}
+.g-parts-toggle:active{transform:scale(.98)}
+.g-parts-toggle.on{border-style:solid;border-color:var(--primary);color:var(--primary)}
+.g-parts-count{background:var(--surface2);color:var(--dim);font-size:13px;font-weight:700;padding:2px 10px;border-radius:11px}
+.g-note{color:var(--dim);font-size:16px;padding:8px 0 2px}
+
+/* ─────────────────────────  STEPPER  ───────────────────────── */
+.g-step{display:inline-flex;align-items:center;gap:2px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.g-step-b{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;color:var(--text)}
+.g-step-b:active{background:var(--line)}
+.g-step-v{min-width:30px;text-align:center;font-family:var(--font-head);font-weight:700;font-size:17px}
+
+/* ─────────────────────────  ACTION BAR  ───────────────────────── */
+.g-actionbar{position:sticky;bottom:0;display:flex;align-items:center;gap:12px;margin-top:26px;
+  padding:16px 0 4px;background:linear-gradient(to top,var(--bg) 72%,transparent)}
+.g-actionbar-sp{flex:1}
+.g-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font-head);
+  font-weight:700;font-size:17px;border-radius:14px;padding:16px 24px;transition:transform .12s,filter .15s}
+.g-btn:active{transform:scale(.97)}
+.g-btn.primary{background:var(--primary);color:var(--on-primary);box-shadow:var(--shadow)}
+.g-btn.primary:disabled{opacity:.5}
+.g-btn.primary.full{width:100%}
+.g-btn.ghost{background:var(--surface);border:1px solid var(--line);color:var(--text)}
+
+/* ─────────────────────────  CART DRAWER  ───────────────────────── */
+.g-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:60;
+  display:flex;animation:gfade .2s ease}
+.g-modal.right{justify-content:flex-end}
+@keyframes gfade{from{opacity:0}to{opacity:1}}
+.g-drawer{width:min(460px,92vw);height:100%;background:var(--bg2);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;box-shadow:var(--shadow-lg);animation:gslide .26s cubic-bezier(.2,.8,.2,1)}
+@keyframes gslide{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.g-drawer-head{display:flex;align-items:flex-start;justify-content:space-between;padding:24px 22px;border-bottom:1px solid var(--line)}
+.g-drawer-list{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.g-line-item{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px}
+.g-li-ic{width:54px;height:54px;border-radius:12px;background:var(--media-bg);display:grid;place-items:center;color:var(--primary);flex-shrink:0}
+.g-li-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.g-li-kind{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700}
+.g-li-name{font-family:var(--font-head);font-weight:600;font-size:16px;line-height:1.15}
+.g-li-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.g-li-rm{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:var(--dim)}
+.g-li-rm:active{color:var(--danger)}
+.g-drawer-foot{padding:18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+
+/* ─────────────────────────  SUMMARY  ───────────────────────── */
+.g-summary{display:flex;flex-direction:column;gap:14px}
+.g-sum-row{display:flex;gap:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;align-items:center}
+.g-sum-row.kind-headtop{border-color:color-mix(in srgb,var(--primary) 40%,var(--line))}
+.g-sum-media{width:120px;flex-shrink:0;border-radius:var(--radius-sm);overflow:hidden}
+.g-sum-media .g-media{aspect-ratio:1/1}
+.g-sum-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.g-sum-name{font-family:var(--font-head);font-weight:600;font-size:19px;line-height:1.18}
+.g-sum-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.g-summary.style-receipt .g-sum-media{display:none}
+.g-summary.style-receipt .g-sum-row{border-radius:0;border-left:none;border-right:none;border-top:none;background:transparent;padding:14px 4px}
+.g-summary.style-receipt{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px 20px}
+
+/* ─────────────────────────  FORM  ───────────────────────── */
+.g-form{display:flex;flex-direction:column;gap:18px}
+.g-form-grid{display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
+.g-field{display:flex;flex-direction:column;gap:8px}
+.g-field.area{grid-column:1/-1}
+.g-field-l{font-weight:600;font-size:15px;color:var(--text)}
+.g-field-l em{font-style:normal;font-size:12px;color:var(--dim);font-weight:500;margin-left:4px}
+.g-field input,.g-field textarea{font-family:inherit;font-size:17px;color:var(--text);background:var(--surface);
+  border:1px solid var(--line2);border-radius:14px;padding:15px 16px;outline:none;transition:border-color .15s;resize:none}
+.g-field input:focus,.g-field textarea:focus{border-color:var(--primary)}
+.g-field input::placeholder,.g-field textarea::placeholder{color:var(--dim)}
+.g-check{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:16px 18px;cursor:pointer}
+.g-check input{position:absolute;opacity:0;width:0;height:0}
+.g-check-box{flex-shrink:0;width:28px;height:28px;border-radius:9px;border:2px solid var(--line2);
+  display:grid;place-items:center;color:transparent;transition:.15s}
+.g-check input:checked + .g-check-box{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.g-check-tx{font-size:14.5px;color:var(--dim);line-height:1.45}
+.g-err{background:color-mix(in srgb,var(--danger) 14%,transparent);border:1px solid var(--danger);color:var(--text);
+  padding:13px 16px;border-radius:12px;font-weight:600;font-size:15px}
+.g-form-count{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-family:var(--font-head);color:var(--dim)}
+
+/* ─────────────────────────  EMPTY / SUCCESS / VIDEO  ───────────────────────── */
+.g-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  text-align:center;color:var(--dim);padding:60px 20px}
+.g-empty p{font-family:var(--font-head);font-weight:600;font-size:20px;color:var(--text)}
+.g-success{align-items:center;justify-content:center;text-align:center}
+.g-success-in{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:520px;margin:auto}
+.g-success-ic{width:108px;height:108px;border-radius:50%;display:grid;place-items:center;margin-bottom:10px;
+  background:var(--primary);color:var(--on-primary);box-shadow:var(--shadow-lg);animation:gpop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes gpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.g-ref{background:var(--surface);border:1px dashed var(--line2);border-radius:14px;padding:12px 22px;margin:8px 0 22px;
+  font-size:16px;color:var(--dim)}
+.g-ref b{font-family:var(--font-head);color:var(--text);letter-spacing:.08em;margin-left:6px}
+.g-modal-box{margin:auto;width:min(880px,92vw);background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-lg)}
+.g-modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
+.g-modal-title{font-family:var(--font-head);font-weight:600;font-size:20px;margin-top:3px}
+.g-video{aspect-ratio:16/9;background:#000}
+.g-video-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  color:var(--dim);background:repeating-linear-gradient(45deg,#0a1418,#0a1418 14px,#0d1a1f 14px,#0d1a1f 28px)}
+.g-video-ph span{font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+
+/* responsivo: telas largas (PC) */
+@media (min-width:880px){
+  .g-home-grid{grid-template-columns:1fr 1fr}
+  .g-line-grid{grid-template-columns:1fr 1fr}
+  .g-act-grid{grid-template-columns:repeat(3,1fr)}
+  .g-prod-grid:not(.layout-list){grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:430px){
+  .g-act-grid{grid-template-columns:repeat(2,1fr)}
+  .g-prod-grid{grid-template-columns:1fr}
+  .g-bigcard-ic{width:80px;height:80px}
+  .g-bigcard-ic svg{width:64px;height:64px}
+  .g-sum-media{width:84px}
+}
+@media (prefers-reduced-motion:reduce){
+  .g-float,.g-pulse,.g-blob{animation:none}
+}
+</style>
+</head>
+<body data-theme="gvs">
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data/catalog.js"></script>
+<script src="data/i18n.js"></script>
+<script src="data/desc-i18n.js"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="app/icons.jsx"></script>
+<script type="text/babel" src="app/ui.jsx"></script>
+<script type="text/babel" src="app/screens.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ░░ CONFIGURE AQUI: URL do Web App do Google Apps Script ░░
+   Cole a URL terminada em /exec. Vazio = modo simulação (não grava).
+   (Também pode ser definida pelo painel Tweaks, sem editar o código.)        */
+const APPS_SCRIPT_URL = "";
+
+const FONTS = {
+  titillium: { head: '"Titillium Web"', body: '"Titillium Web"' },
+  sora:      { head: '"Sora"', body: '"Barlow"' },
+  archivo:   { head: '"Archivo"', body: '"Barlow"' },
+};
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "midnight",
+  "primary": "#009fe3",
+  "fontPair": "titillium",
+  "attractStyle": "bold",
+  "selLayout": "grid",
+  "summaryStyle": "cards",
+  "idleSec": 90,
+  "endpoint": ""
+}/*EDITMODE-END*/;
+
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem("gvs_"+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem("gvs_"+k, JSON.stringify(v)); }catch(e){} },
+};
+
+function genRef(){
+  return "GVS-" + Date.now().toString(36).slice(-4).toUpperCase()
+    + Math.random().toString(36).slice(2,5).toUpperCase();
+}
+
+function App(){
+  const [tw, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const C = window.GVS_CATALOG;
+  const I = window.GVS_I18N;
+
+  const [lang, setLangState] = useState(() => LS.get("lang","pt"));
+  const [screen, setScreen] = useState("attract");
+  const [hist, setHist] = useState([]);
+  const [activity, setActivity] = useState(null);
+  const [line, setLine] = useState(null);
+  const [unit, setUnit] = useState(null);
+  const [unitFam, setUnitFam] = useState(null);
+  const [headFam, setHeadFam] = useState(null);
+  const [headtop, setHeadtop] = useState(null);
+  const [cart, setCart] = useState(() => LS.get("cart",{}));
+  const [cartOpen, setCartOpen] = useState(false);
+  const [video, setVideo] = useState(null);
+  const [ref, setRef] = useState(null);
+
+  const t = I[lang];
+
+  // aplicar tema/fontes/cor
+  useEffect(() => { document.body.setAttribute("data-theme", tw.theme || "gvs"); }, [tw.theme]);
+  useEffect(() => {
+    const f = FONTS[tw.fontPair] || FONTS.titillium;
+    document.documentElement.style.setProperty("--font-head", f.head + ",system-ui,sans-serif");
+    document.documentElement.style.setProperty("--font-body", f.body + ",system-ui,sans-serif");
+  }, [tw.fontPair]);
+  useEffect(() => {
+    document.documentElement.style.setProperty("--primary", tw.primary || "#009fe3");
+    // tom de texto sobre o primário: claro p/ cores escuras
+    document.documentElement.style.setProperty("--on-primary", isLight(tw.primary) ? "#06231e" : "#ffffff");
+    document.documentElement.style.setProperty("--html-lang", lang);
+  }, [tw.primary, lang]);
+  useEffect(() => { document.documentElement.lang = t.locale; }, [lang]);
+
+  // persistência
+  const setLang = (l) => { setLangState(l); LS.set("lang", l); };
+  useEffect(() => { LS.set("cart", cart); }, [cart]);
+
+  // ── navegação ──
+  const nav = useCallback((to) => {
+    setScreen((cur) => { setHist((h) => [...h, cur]); return to; });
+    document.querySelector(".g-main")?.scrollTo(0,0);
+  }, []);
+  const back = useCallback(() => {
+    setHist((h) => { if(!h.length) return h; const p=[...h]; const prev=p.pop(); setScreen(prev); return p; });
+    document.querySelector(".g-main")?.scrollTo(0,0);
+  }, []);
+
+  const restart = useCallback(() => {
+    setCart({}); setActivity(null); setLine(null); setUnit(null); setUnitFam(null); setHeadFam(null); setHeadtop(null);
+    setRef(null); setHist([]); setCartOpen(false); setVideo(null); setScreen("attract");
+  }, []);
+
+  // ── carrinho ──
+  const metaOf = (id) => C.items.find(i => i.id === id);
+  const kindOf = (id) => { const it = metaOf(id); return it ? it.kind : "accessory"; };
+  const is = (id) => !!cart[id];
+  const add = (id) => setCart((c)=>({ ...c, [id]: (c[id]||0)+1 }));
+  const inc = (id) => setCart((c)=>({ ...c, [id]: (c[id]||0)+1 }));
+  const dec = (id) => setCart((c)=>{ const q=(c[id]||0)-1; const n={...c}; if(q<=0) delete n[id]; else n[id]=q; return n; });
+  const remove = (id) => setCart((c)=>{ const n={...c}; delete n[id]; return n; });
+  const clear = () => setCart({});
+  // troca o item único de um papel (unidade/headtop) ao escolher outro
+  const pickReplace = (prev, p) => setCart((c)=>{ const n={...c}; if(prev && prev.id!==p.id) delete n[prev.id]; n[p.id]=(n[p.id]||0)+1; return n; });
+  const pickUnit = (p) => { pickReplace(unit, p); setUnit(p); };
+  const pickHeadtop = (p) => { pickReplace(headtop, p); setHeadtop(p); };
+  const KORD = { main:0, sensor:1, accessory:2, part:3 };
+  const cartList = () => Object.keys(cart).map(id => ({ p: metaOf(id), qty: cart[id], kind: kindOf(id) }))
+    .filter(x => x.p).sort((a,b)=> (KORD[a.kind]??9)-(KORD[b.kind]??9));
+  const count = Object.values(cart).reduce((s,q)=>s+q,0);
+
+  // ── seletores do catálogo ──
+  const units = (l) => { const fam = (l && l.unitFams) ? unitFam : (l && l.unitFam); return C.items.filter(i => i.fam===fam && i.kind==="main"); };
+  const unitFamilies = (l) => { if(l && l.unitFams){ return l.unitFams.map(f=>({id:f, count:C.items.filter(i=>i.fam===f && i.kind==="main").length})).filter(x=>x.count>0); } const c = C.items.filter(i=>i.fam===l.unitFam && i.kind==="main").length; return c ? [{ id:l.unitFam, count:c }] : []; };
+  const sensors = (l) => C.items.filter(i => i.fam===l.unitFam && i.kind==="sensor");
+  const compatHeadtops = (l) => C.items.filter(i => i.group==="headtop" && i.kind==="main" && (l.compat ? i[l.compat] : false));
+  // Regras de headtop por atividade × fonte de ar (papr=motorizado, sar=ar mandado).
+  // Modo restrição: por família, lista branca de códigos (família ausente = padrão; []=oculta).
+  // Modo inclusão: mostra a linha só nessa fonte, restrita às famílias indicadas.
+  const HEAD_RULES = {
+    solda: { papr: { zlink:["16-010-21-CE"] } },
+    pintura: {
+      papr: { zlink:["16-010-12-CE","16-010-11-CE"] },
+      sar:  { zlink:["16-010-12-CE","16-020-21"], t200:["17-200-32-CE","17-210-32-CE"], tlink:["17-120-12","17-020-12"] }
+    },
+    saude: {
+      papr: { zlink:["16-010-12-CE","16-020-12"], tlink:["17-110-12-CE","17-000-12-CE","17-100-12-CE"] },
+      sar:  { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12","16-020-11","16-020-21"] }
+    },
+    farmaceutica: {
+      papr: { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE"], tlink:["17-110-12-CE","17-000-12-CE","17-100-12-CE"] },
+      sar:  { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12","16-020-11","16-020-21"], tlink:["17-120-12","17-020-12"], t200:["17-200-22-CE","17-200-32-CE","17-202-22-CE","17-202-32-CE","17-210-22-CE","17-210-32-CE","17-212-22-CE","17-212-32-CE"] }
+    },
+    quimica: {
+      papr: { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12"], tlink:["17-110-12-CE","17-000-12-CE","17-100-12-CE"], t200:["17-200-22-CE","17-200-32-CE","17-202-22-CE","17-202-32-CE","17-210-22-CE","17-210-32-CE","17-212-22-CE","17-212-32-CE"] },
+      sar:  { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12","16-020-11","16-020-21"], tlink:["17-120-12","17-020-12"], t200:["17-200-22-CE","17-200-32-CE","17-202-22-CE","17-202-32-CE","17-210-22-CE","17-210-32-CE","17-212-22-CE","17-212-32-CE"] }
+    },
+    fundicao: {
+      papr: { zlink:["16-010-24-CE"], z4:[] },
+      sar:  { zlink:["16-010-24-CE"] }
+    },
+    agro:      { include:"papr", fams:["tlink"] },
+    construcao:{ include:"papr", fams:["zlink"] },
+    mineracao: { include:"papr", fams:["zlink"] }
+  };
+  const applyHeadRule = (list, l) => {
+    if(!activity) return list;
+    const rule = HEAD_RULES[activity.id];
+    if(!rule) return list;
+    const src = l.compat;
+    if(rule.include){
+      if(rule.include !== src) return [];
+      return list.filter(i => (rule.fams||[]).includes(i.fam));
+    }
+    const sr = rule[src];
+    if(!sr) return list;
+    return list.filter(i => (i.fam in sr) ? sr[i.fam].includes(i.code) : true);
+  };
+  const headtops = (l) => { let hs = compatHeadtops(l); if(activity){ const f = hs.filter(i=>i.acts.includes(activity.id)); if(f.length) hs=f; hs = applyHeadRule(hs, l); } return hs; };
+  const headFamilies = (l) => { const seen={}, order=[]; headtops(l).forEach(i=>{ if(!seen[i.fam]){seen[i.fam]=0;order.push(i.fam);} seen[i.fam]++; }); return order.map(id=>({id,count:seen[id]})); };
+  const accFams = () => (line && (line.id==="papr"||line.id==="sar"))
+    ? [headtop&&headtop.fam].filter(Boolean)
+    : [unit&&unit.fam].filter(Boolean);
+  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory"); };
+  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part"); };
+  // acessórios + peças do equipamento (PX5/C40) — guarda-chuva próprio, minimizado
+  const unitExtras = () => {
+    if(!(line && (line.id==="papr"||line.id==="sar"))) return [];
+    if(!unit || (headtop && unit.fam===headtop.fam)) return [];
+    return C.items.filter(i=>i.fam===unit.fam && (i.kind==="accessory"||i.kind==="part"));
+  };
+  const isRecommended = (l) => { if(!activity) return false;
+    const rule = HEAD_RULES[activity.id];
+    if(rule && rule.include && l.compat===rule.include) return true;
+    if(units(l).some(i=>i.acts.includes(activity.id))) return true;
+    if(l.compat && compatHeadtops(l).some(i=>i.acts.includes(activity.id))) return true;
+    return false; };
+  const activityUnits = () => { if(!activity) return [];
+    const base = C.lines.filter(l => l.compat && isRecommended(l))
+      .map(l => ({ line:l, fam:l.unitFam, count: units(l).length }));
+    const elLine = C.lines.find(l => l.id==="elipse");
+    const elFams = (activity.elipseFams||[]).map(fam => ({ line:elLine, fam,
+      count: C.items.filter(i=>i.fam===fam && i.kind==="main").length })).filter(x=>x.count>0);
+    return [...base, ...elFams]; };
+  const famName = (id) => { const f=C.families.find(x=>x.id===id); return f?f.name:id; };
+  const goNext = (step) => { const seq=line.steps; const i=seq.indexOf(step); nav(seq[i+1]||"summary"); };
+
+  // ── envio ──
+  const submit = async (form) => {
+    const reference = genRef();
+    const payload = {
+      ref: reference, ts: new Date().toISOString(), lang,
+      name: form.name, company: form.company, role: form.role,
+      phone: form.phone, email: form.email, notes: form.notes, lgpd: !!form.lgpd,
+      items: cartList().map(({p,qty,kind}) => ({ code:p.code, name:(window.descOf?window.descOf(p,lang):p.desc), qty, kind })),
+      config_text: cartList().map(({p,qty,kind}) => `${qty}x ${p.code} ${window.descOf?window.descOf(p,lang):p.desc} [${kind}]`).join(" | "),
+    };
+    const url = (tw.endpoint && tw.endpoint.trim()) || APPS_SCRIPT_URL;
+    try{
+      if(url){
+        await fetch(url, { method:"POST", mode:"no-cors",
+          headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+      } else {
+        await new Promise(r=>setTimeout(r,900)); // simulação
+        console.log("[GVS] Envio simulado (sem endpoint). Payload:", payload);
+      }
+      setRef(reference); nav("success"); setCart({});
+      return true;
+    } catch(e){ console.error(e); return false; }
+  };
+
+  // ── reset por inatividade (modo quiosque) ──
+  const idleRef = useRef(null);
+  useEffect(() => {
+    const secs = Number(tw.idleSec)||0;
+    const reset = () => {
+      clearTimeout(idleRef.current);
+      if(secs <= 0) return;
+      idleRef.current = setTimeout(() => {
+        setScreen((cur) => { if(cur==="attract") return cur; restart(); return "attract"; });
+      }, secs*1000);
+    };
+    const evs = ["pointerdown","keydown","touchstart"];
+    evs.forEach(e=>window.addEventListener(e, reset, {passive:true}));
+    reset();
+    return () => { evs.forEach(e=>window.removeEventListener(e, reset)); clearTimeout(idleRef.current); };
+  }, [tw.idleSec, restart]);
+
+  const ctx = {
+    t, lang, C, tw, nav, back, restart, setLang,
+    activity, setActivity, line, setLine, unit, setUnit, unitFam, setUnitFam, headFam, setHeadFam, headtop, setHeadtop,
+    pickUnit, pickHeadtop, units, unitFamilies, sensors, headtops, headFamilies, accessories, parts, unitExtras,
+    isRecommended, activityUnits, famName, goNext,
+    cart, count, is, add, inc, dec, remove, clear, cartList, metaOf,
+    openVideo: (p) => setVideo(p), submit, ref,
+    start: () => nav("home"),
+  };
+
+  const SCREENS = {
+    attract: window.ScreenAttract, home: window.ScreenHome, activities: window.ScreenActivities,
+    lines: window.ScreenLines, actunits: window.ScreenActUnits, unitfam: window.ScreenUnitFam, unit: window.ScreenUnit, headfam: window.ScreenHeadFam,
+    headtop: window.ScreenHeadtop, sensor: window.ScreenSensor, accessories: window.ScreenAccessories,
+    summary: window.ScreenSummary, form: window.ScreenForm, success: window.ScreenSuccess,
+  };
+  const Screen = SCREENS[screen] || window.ScreenHome;
+  const showChrome = screen !== "attract";
+  const showBack = !["attract","home","success"].includes(screen) && hist.length>0;
+
+  return (
+    <div className="g-app">
+      {showChrome && (
+        <window.GVSChrome t={t} lang={lang} setLang={setLang} count={count}
+          onCart={()=>setCartOpen(true)} onHome={restart} showHome={screen!=="home"} />
+      )}
+      <main className="g-main">
+        {showBack && (
+          <div className="g-backbar">
+            <button className="g-back" onClick={back}><window.UIIcon name="left" size={20}/> {t.back}</button>
+          </div>
+        )}
+        <Screen ctx={ctx} />
+      </main>
+      {cartOpen && <window.CartDrawer ctx={ctx} onClose={()=>setCartOpen(false)} />}
+      {video && <window.VideoModal p={video} t={t} lang={lang} onClose={()=>setVideo(null)} />}
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Estilo visual" />
+        <TweakRadio label="Tema" value={tw.theme}
+          options={[{value:"gvs",label:"GVS"},{value:"midnight",label:"Escuro"},{value:"bold",label:"Vibrante"}]}
+          onChange={(v)=>setTweak("theme",v)} />
+        <TweakColor label="Cor principal" value={tw.primary}
+          options={["#009fe3","#0079b5","#00b4ff","#1f6feb","#808b95"]}
+          onChange={(v)=>setTweak("primary",v)} />
+        <TweakSelect label="Tipografia" value={tw.fontPair}
+          options={[{value:"titillium",label:"Titillium (GVS)"},{value:"sora",label:"Sora + Barlow"},{value:"archivo",label:"Archivo + Barlow"}]}
+          onChange={(v)=>setTweak("fontPair",v)} />
+        <TweakSection label="Layout" />
+        <TweakRadio label="Tela de atração" value={tw.attractStyle}
+          options={[{value:"focus",label:"Foco"},{value:"bold",label:"Impacto"},{value:"minimal",label:"Limpa"}]}
+          onChange={(v)=>setTweak("attractStyle",v)} />
+        <TweakRadio label="Seleção" value={tw.selLayout}
+          options={[{value:"grid",label:"Grade"},{value:"list",label:"Lista"}]}
+          onChange={(v)=>setTweak("selLayout",v)} />
+        <TweakRadio label="Resumo" value={tw.summaryStyle}
+          options={[{value:"cards",label:"Cards"},{value:"receipt",label:"Lista"}]}
+          onChange={(v)=>setTweak("summaryStyle",v)} />
+        <TweakSection label="Quiosque" />
+        <TweakSlider label="Reset inatividade" value={tw.idleSec} min={0} max={180} step={15} unit="s"
+          onChange={(v)=>setTweak("idleSec",v)} />
+        <TweakText label="URL Apps Script" value={tw.endpoint} placeholder="https://.../exec"
+          onChange={(v)=>setTweak("endpoint",v)} />
+      </TweaksPanel>
+    </div>
+  );
+}
+
+function isLight(hex){
+  if(!hex) return false;
+  const h = hex.replace("#",""); const x = h.length===3 ? h.replace(/./g,c=>c+c) : h;
+  const n = parseInt(x.slice(0,6),16); if(Number.isNaN(n)) return false;
+  const r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  return (r*299+g*587+b*114) > 150000;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+
+<!-- Mantém a tela do tablet/celular ligada enquanto o app está aberto (modo quiosque) -->
+<script>
+(function(){
+  var wl = null;
+  function acquire(){
+    if(!('wakeLock' in navigator)) return;
+    try {
+      navigator.wakeLock.request('screen').then(function(s){
+        wl = s;
+        s.addEventListener('release', function(){ wl = null; });
+      }).catch(function(){});
+    } catch(e){}
+  }
+  // (re)adquire ao carregar, ao voltar o foco e em qualquer interação
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') acquire(); });
+  window.addEventListener('focus', acquire);
+  ['pointerdown','touchstart','keydown'].forEach(function(e){
+    window.addEventListener(e, function once(){ acquire(); }, { passive:true });
+  });
+  acquire();
+})();
+</script>
+</body>
+</html>
