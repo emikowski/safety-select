@@ -71,7 +71,11 @@ img{display:block;max-width:100%}
 
 /* ─────────────────────────  CHROME  ───────────────────────── */
 .g-chrome{display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:16px clamp(18px,3.5vw,40px);border-bottom:1px solid var(--line);
+  padding:16px clamp(18px,3.5vw,40px);
+  padding-top:calc(16px + env(safe-area-inset-top,0px));
+  padding-left:calc(clamp(18px,3.5vw,40px) + env(safe-area-inset-left,0px));
+  padding-right:calc(clamp(18px,3.5vw,40px) + env(safe-area-inset-right,0px));
+  border-bottom:1px solid var(--line);
   background:color-mix(in srgb,var(--bg) 82%,transparent);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);position:relative;z-index:30}
 .g-logo{display:flex;flex-direction:column;line-height:1;align-items:flex-start}
