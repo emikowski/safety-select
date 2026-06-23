@@ -465,64 +465,24 @@ function App(){
   const unitFamilies = (l) => { if(l && l.unitFams){ return l.unitFams.map(f=>({id:f, count:C.items.filter(i=>i.fam===f && i.kind==="main").length})).filter(x=>x.count>0); } const c = C.items.filter(i=>i.fam===l.unitFam && i.kind==="main").length; return c ? [{ id:l.unitFam, count:c }] : []; };
   const sensors = (l) => C.items.filter(i => i.fam===l.unitFam && i.kind==="sensor");
   const compatHeadtops = (l) => C.items.filter(i => i.group==="headtop" && i.kind==="main" && (l.compat ? i[l.compat] : false));
-  // Regras de headtop por atividade × fonte de ar (papr=motorizado, sar=ar mandado).
-  // Modo restrição: por família, lista branca de códigos (família ausente = padrão; []=oculta).
-  // Modo inclusão: mostra a linha só nessa fonte, restrita às famílias indicadas.
-  const HEAD_RULES = {
-    solda: { papr: { zlink:["16-010-21-CE"] } },
-    pintura: {
-      papr: { zlink:["16-010-12-CE","16-010-11-CE"] },
-      sar:  { zlink:["16-010-12-CE","16-020-21"], t200:["17-200-32-CE","17-210-32-CE"], tlink:["17-120-12","17-020-12"] }
-    },
-    saude: {
-      papr: { zlink:["16-010-12-CE","16-020-12"], tlink:["17-110-12-CE","17-000-12-CE","17-100-12-CE"] },
-      sar:  { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12","16-020-11","16-020-21"] }
-    },
-    farmaceutica: {
-      papr: { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE"], tlink:["17-110-12-CE","17-000-12-CE","17-100-12-CE"] },
-      sar:  { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12","16-020-11","16-020-21"], tlink:["17-120-12","17-020-12"], t200:["17-200-22-CE","17-200-32-CE","17-202-22-CE","17-202-32-CE","17-210-22-CE","17-210-32-CE","17-212-22-CE","17-212-32-CE"] }
-    },
-    quimica: {
-      papr: { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12"], tlink:["17-110-12-CE","17-000-12-CE","17-100-12-CE"], t200:["17-200-22-CE","17-200-32-CE","17-202-22-CE","17-202-32-CE","17-210-22-CE","17-210-32-CE","17-212-22-CE","17-212-32-CE"] },
-      sar:  { zlink:["16-010-31-CE","16-010-12-CE","16-010-11-CE","16-020-12","16-020-11","16-020-21"], tlink:["17-120-12","17-020-12"], t200:["17-200-22-CE","17-200-32-CE","17-202-22-CE","17-202-32-CE","17-210-22-CE","17-210-32-CE","17-212-22-CE","17-212-32-CE"] }
-    },
-    fundicao: {
-      papr: { zlink:["16-010-24-CE"], z4:[] },
-      sar:  { zlink:["16-010-24-CE"] }
-    },
-    agro:      { include:"papr", fams:["tlink"] },
-    construcao:{ include:"papr", fams:["zlink"] },
-    mineracao: { include:"papr", fams:["zlink"] }
-  };
-  const applyHeadRule = (list, l) => {
-    if(!activity) return list;
-    const rule = HEAD_RULES[activity.id];
-    if(!rule) return list;
-    const src = l.compat;
-    if(rule.include){
-      if(rule.include !== src) return [];
-      return list.filter(i => (rule.fams||[]).includes(i.fam));
-    }
-    const sr = rule[src];
-    if(!sr) return list;
-    return list.filter(i => (i.fam in sr) ? sr[i.fam].includes(i.code) : true);
-  };
-  const headtops = (l) => { let hs = compatHeadtops(l); if(activity){ const f = hs.filter(i=>i.acts.includes(activity.id)); if(f.length) hs=f; hs = applyHeadRule(hs, l); } return hs; };
+  // Headtops por atividade: dirigido pela coluna "Atividades" do catálogo (i.acts).
+  const headtops = (l) => { let hs = compatHeadtops(l); if(activity){ hs = hs.filter(i=>i.acts.includes(activity.id)); } return hs; };
   const headFamilies = (l) => { const seen={}, order=[]; headtops(l).forEach(i=>{ if(!seen[i.fam]){seen[i.fam]=0;order.push(i.fam);} seen[i.fam]++; }); return order.map(id=>({id,count:seen[id]})); };
   const accFams = () => (line && (line.id==="papr"||line.id==="sar"))
     ? [headtop&&headtop.fam].filter(Boolean)
     : [unit&&unit.fam].filter(Boolean);
-  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory"); };
-  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part"); };
+  // filtra peça/acessório pela fonte de ar atual (só esconde itens marcados exclusivos da outra fonte)
+  const airOK = (i) => { if(!(line && (line.id==="papr"||line.id==="sar"))) return true;
+    return line.compat==="papr" ? (i.papr || !i.sar) : (i.sar || !i.papr); };
+  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory" && airOK(i)); };
+  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part" && airOK(i)); };
   // acessórios + peças do equipamento (PX5/C40) — guarda-chuva próprio, minimizado
   const unitExtras = () => {
     if(!(line && (line.id==="papr"||line.id==="sar"))) return [];
     if(!unit || (headtop && unit.fam===headtop.fam)) return [];
-    return C.items.filter(i=>i.fam===unit.fam && (i.kind==="accessory"||i.kind==="part"));
+    return C.items.filter(i=>i.fam===unit.fam && (i.kind==="accessory"||i.kind==="part") && airOK(i));
   };
   const isRecommended = (l) => { if(!activity) return false;
-    const rule = HEAD_RULES[activity.id];
-    if(rule && rule.include && l.compat===rule.include) return true;
     if(units(l).some(i=>i.acts.includes(activity.id))) return true;
     if(l.compat && compatHeadtops(l).some(i=>i.acts.includes(activity.id))) return true;
     return false; };

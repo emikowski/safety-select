@@ -1,0 +1,31 @@
+﻿MANTER/TIRAR;Familia;Codigo;Descricao (PT);Categoria;Headtop?;Motorizado(PAPR);Ar Mandado(SAR);Atividades;Certificacao;Pagina;Imagem;OBS / ITENS FALTANDO
+;GX4;08-231;Suporte de Parede;Accessory;;;;;670;;assets/produtos/08-231.jpg;
+;GX4;08-400-G;"Monitor de Gás GX4 - Sem Sensor; inclui pacote adaptador de energia, suportes de fixação e mangueira de suprimento de ar.";Package;;;SIM;monitoramento;670;;assets/produtos/08-400-GX4.jpg;
+;GX4;08-401;"Monitor de Gás GX4 - Sem Sensor com Cabo de 12 Volts com Garras de Bateria; inclui suportes de fixação e mangueira de suprimento de ar.";Package;;;SIM;monitoramento;670;;assets/produtos/08-401-01.jpg;
+;GX4;08-420;Caixa de Sensor Vazia;Part;;;;;670;;assets/produtos/08-420-GX4-Gas-Sensor-Cartridge.jpg;
+;GX4;08-420-01;Cartucho Sensor de Gás - Monóxido de Carbono - CO 10ppm;Sensor;;;;;670;;assets/produtos/08-420-01-GX4-Gas-Sensor-Cartridge-C0-10ppm.jpg;
+;GX4;08-420-02;Cartucho Sensor de Gás - Monóxido de Carbono - CO 5ppm;Sensor;;;;;670;;assets/produtos/08-420-02.jpg;
+;GX4;08-420-03;Cartucho Sensor de Gás - Sulfeto de Hidrogênio - H2S 10ppm;Sensor;;;;;670;;assets/produtos/08-420-03.jpg;
+;GX4;08-420-04;"Cartucho Sensor de Gás - Oxigênio - O2 19,5-23%";Sensor;;;;;670;;assets/produtos/08-420-04.jpg;
+;GX4;08-422;Tubo Coletor do Sensor;Part;;;;;670;;assets/produtos/08-422-2.jpg;
+;GX4;08-424;Maleta de Campo Reforçada;Accessory;;;;;670;;assets/produtos/08-424-3-L.jpg;
+;GX4;08-425;"Suporte de Fixação - par, inclui parafusos.";Part;;;;;670;;assets/produtos/08-425-3.jpg;
+;GX4;08-428;Mangueira de Suprimento de Ar - inclui conector one-touch.;Part;;;;;670;;assets/produtos/08-428.jpg;
+;GX4;08-429;Filtro de Entrada M5;Part;;;;;670;;assets/produtos/08-429-GX4-M5-Inlet-Filter-Sintered-Brass.jpg;
+;GX4;08-430-EU;Conjunto de Fonte de Alimentação - UE;Part;;;;;670;;assets/produtos/08-430-EU.jpg;
+;GX4;08-430-UK;Conjunto de Fonte de Alimentação - Reino Unido;Part;;;;;670;;assets/produtos/08-430-UK.jpg;
+;GX4;08-431;Garra e Plugue de Bateria de 12 Volts;Part;;;;;670;;assets/produtos/08-431.jpg;
+;GX4;08-434;Cabo Auxiliar 15m com Extremidade Descascada;Accessory;;;;;670;;assets/produtos/08-434-2.jpg;
+;GX4;08-435;Luz Estroboscópica com Cabo de 15m;Accessory;;;;;670;;assets/produtos/08-435.jpg;
+;GX4;08-436;Torre Auxiliar de Estroboscópio e Alarme com Cabo de 15m;Accessory;;;;;670;;assets/produtos/08-436-4.jpg;
+;GX4;08-437;Conector AUX para Instalação em Campo;Part;;;;;670;;assets/produtos/08-437.jpg;
+;GX4;08-450;Adaptador de Calibração;Part;;;;;670;;assets/produtos/08-450-Calibration-Adapter.jpg;
+;GX4;08-451;"Regulador de Fluxo de Calibração - para cilindros de CO e Ar Zero, inclui 08-450.";Part;;;;;670;;assets/produtos/08-451-GX4-Calibration-Flow-Regulator.jpg;
+;GX4;08-452;"Regulador de Fluxo de Calibração - para cilindros de H2S, inclui mangueira e conexão.";Part;;;;;670;;assets/produtos/08452.jpg;
+;GX4;08-470;Regulador de Fluxo Externo;Part;;;;;670;;assets/produtos/08-470-GX4-External-Flow-Regulator.jpg;
+;GX4;09-021-EU;Cabo de Alimentação RPB - plugue UE;Part;;;;;670;;assets/produtos/09-021-EU-2.jpg;
+;GX4;09-021-UK;Cabo de Alimentação RPB - plugue Reino Unido.;Part;;;;;670;;assets/produtos/09-021-UK-7.jpg;
+
+"ADICIONAR ABAIXO ↓ (codigo, descricao, etc):"
+
+
