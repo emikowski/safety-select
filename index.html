@@ -461,7 +461,7 @@ function App(){
   const count = Object.values(cart).reduce((s,q)=>s+q,0);
 
   // ── seletores do catálogo ──
-  const units = (l) => { const fam = (l && l.unitFams) ? unitFam : (l && l.unitFam); return C.items.filter(i => i.fam===fam && i.kind==="main"); };
+  const units = (l) => { const fam = (l && l.unitFams) ? unitFam : (l && l.unitFam); let u = C.items.filter(i => i.fam===fam && i.kind==="main"); if(activity){ const f = u.filter(i=>i.acts && i.acts.includes(activity.id)); if(f.length) u=f; } return u; };
   const unitFamilies = (l) => { if(l && l.unitFams){ return l.unitFams.map(f=>({id:f, count:C.items.filter(i=>i.fam===f && i.kind==="main").length})).filter(x=>x.count>0); } const c = C.items.filter(i=>i.fam===l.unitFam && i.kind==="main").length; return c ? [{ id:l.unitFam, count:c }] : []; };
   const sensors = (l) => C.items.filter(i => i.fam===l.unitFam && i.kind==="sensor");
   const compatHeadtops = (l) => C.items.filter(i => i.group==="headtop" && i.kind==="main" && (l.compat ? i[l.compat] : false));
