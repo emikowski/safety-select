@@ -20,6 +20,13 @@ const SHEET_ID = "1EXiQ8RbrsFPZh8O9VGNV8GmL58__Iopvwy5qO8OWBpw";  // planilha de
 const SHEET_NAME = "Configurações FISP 2026";
 
 function doPost(e) {
+  // Serializa gravações: evita perda de linhas quando chegam vários envios juntos.
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(30000); // espera até 30s pela vez
+  } catch (lockErr) {
+    return json_({ ok: false, error: "lock timeout" });
+  }
   try {
     const data = JSON.parse(e.postData.contents);
     const sheet = getSheet_();
@@ -40,17 +47,31 @@ function doPost(e) {
       .join("\n");
     const totalQtd = (data.items || []).reduce((s, it) => s + (Number(it.qty) || 0), 0);
 
-    sheet.appendRow([
+    const row = [
       new Date(data.ts || Date.now()),
       data.ref || "", data.lang || "", data.name || "", data.company || "",
       data.role || "", data.phone || "", data.email || "",
       data.lgpd ? "Sim" : "Não", data.notes || "",
       itens || data.config_text || "", totalQtd
-    ]);
+    ];
 
-    return json_({ ok: true, ref: data.ref });
+    // Retry: cobre falhas transitórias do serviço de planilha do Google.
+    var lastErr;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      try {
+        sheet.appendRow(row);
+        SpreadsheetApp.flush(); // confirma a gravação antes de liberar a trava
+        return json_({ ok: true, ref: data.ref });
+      } catch (e2) {
+        lastErr = e2;
+        Utilities.sleep(500); // espera meio segundo e tenta de novo
+      }
+    }
+    return json_({ ok: false, error: "append failed: " + String(lastErr) });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
+  } finally {
+    lock.releaseLock();
   }
 }
 

@@ -362,7 +362,7 @@ const { useState, useEffect, useRef, useCallback } = React;
 /* ░░ CONFIGURE AQUI: URL do Web App do Google Apps Script ░░
    Cole a URL terminada em /exec. Vazio = modo simulação (não grava).
    (Também pode ser definida pelo painel Tweaks, sem editar o código.)        */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyL9TWcr65Mcu0U_DRM04VEod5whbQcestAGOOgxdOPtxDUmNNHfxEf_Hmdm4pO8H0xTQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxGaAvXbbeS253pcplnzw7ohl8of78O5Tx3FxOq0RMwo4sMHgazWwQuh_tmU0FCzkB8A/exec";
 
 const FONTS = {
   titillium: { head: '"Titillium Web"', body: '"Titillium Web"' },
@@ -478,8 +478,11 @@ function App(){
   // filtra peça/acessório pela fonte de ar atual (só esconde itens marcados exclusivos da outra fonte)
   const airOK = (i) => { if(!(line && (line.id==="papr"||line.id==="sar"))) return true;
     return line.compat==="papr" ? (i.papr || !i.sar) : (i.sar || !i.papr); };
-  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory" && airOK(i)); };
-  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part" && airOK(i)); };
+  // Compatibilidade por MODELO (SKU) do headtop: itens trazem models=[SKUs] (revisão por modelo de headtop).
+  // Sem headtop escolhido (linhas filtração/monitoramento) ou item sem models → não filtra por modelo.
+  const modelOK = (i) => { if(!headtop) return true; if(i.models===undefined) return true; return i.models.includes(headtop.code); };
+  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory" && airOK(i) && modelOK(i)); };
+  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part" && airOK(i) && modelOK(i)); };
   // acessórios + peças do equipamento (PX5/C40) — guarda-chuva próprio, minimizado
   const unitExtras = () => {
     if(!(line && (line.id==="papr"||line.id==="sar"))) return [];

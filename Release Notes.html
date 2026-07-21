@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GVS — Release Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#009fe3;
+    --cyan-bright:#16ace8;
+    --navy:#15293f;
+    --ink:#1d2b3c;
+    --muted:#5d6f81;
+    --hair:#e4e9ee;
+    --badge-bg:#e9f4fb;
+    --font-head:"Archivo",system-ui,sans-serif;
+    --font-body:"Barlow",system-ui,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#fff;color:var(--ink);font-family:var(--font-body);
+       font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+  .doc{max-width:8.5in;margin:0 auto;background:#fff;}
+  .doc-frame{width:100%;border-collapse:collapse;}
+  .doc-frame td{padding:0;}
+  .hdr-space,.ftr-space{display:none;}
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero{
+    position:relative;overflow:hidden;
+    background:
+      radial-gradient(120% 140% at 12% 0%, #123756 0%, #0c2740 38%, #071726 66%, #04101c 100%);
+    color:#fff;padding:46px 56px 54px;
+  }
+  .hero::after{content:"";position:absolute;right:-12%;top:-40%;width:60%;height:180%;
+    background:radial-gradient(closest-side, rgba(0,159,227,.20), rgba(0,159,227,0) 70%);
+    pointer-events:none;}
+  .hero-top{display:flex;justify-content:space-between;align-items:center;
+    position:relative;z-index:1;margin-bottom:46px;}
+  .hero-logo{width:78px;height:54px;background:#fff;border-radius:11px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 22px rgba(0,0,0,.28);}
+  .hero-logo img{width:54px;height:auto;display:block;}
+  .hero-tag{font-family:var(--font-mono);font-weight:600;font-size:11.5px;
+    letter-spacing:.26em;color:var(--cyan-bright);text-transform:uppercase;}
+  .hero-eyebrow{font-family:var(--font-mono);font-weight:600;font-size:12px;
+    letter-spacing:.26em;color:var(--cyan-bright);text-transform:uppercase;
+    position:relative;z-index:1;margin-bottom:14px;}
+  .hero h1{font-family:var(--font-head);font-weight:800;font-size:54px;line-height:1;
+    letter-spacing:-.02em;margin:0 0 20px;position:relative;z-index:1;}
+  .hero p{max-width:560px;color:#aebccb;font-size:15.5px;line-height:1.62;
+    margin:0;position:relative;z-index:1;}
+
+  /* ── BODY ─────────────────────────────────────────── */
+  .body{padding:14px 56px 64px;}
+
+  .section{padding:34px 0 6px;}
+  .section + .section{border-top:1px solid var(--hair);}
+  .sec-head{display:flex;gap:20px;align-items:flex-start;margin-bottom:22px;}
+  .sec-num{flex:0 0 auto;width:48px;height:48px;border-radius:12px;
+    background:var(--badge-bg);color:var(--cyan);
+    font-family:var(--font-head);font-weight:700;font-size:20px;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;}
+  .sec-meta{flex:1;min-width:0;}
+  .sec-eyebrow{font-family:var(--font-mono);font-weight:600;font-size:11px;
+    letter-spacing:.22em;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;}
+  .sec-title{font-family:var(--font-head);font-weight:700;font-size:25px;
+    line-height:1.12;letter-spacing:-.01em;color:var(--navy);margin:0 0 8px;}
+  .sec-lead{color:var(--muted);font-size:15px;margin:0;max-width:62ch;}
+
+  .items{margin:4px 0 0;padding-left:68px;}
+  .item{display:grid;grid-template-columns:46px 1fr;gap:8px 14px;
+    padding:13px 0;align-items:baseline;}
+  .item + .item{border-top:1px solid #f0f3f6;}
+  .item-no{font-family:var(--font-head);font-weight:700;font-size:14px;
+    color:var(--navy);letter-spacing:.01em;}
+  .item-t{font-family:var(--font-head);font-weight:700;font-size:15.5px;
+    color:var(--ink);}
+  .item-d{grid-column:2;color:var(--muted);font-size:14.5px;line-height:1.55;}
+
+  .doc-foot{padding:26px 56px 40px;border-top:1px solid var(--hair);
+    display:flex;justify-content:space-between;align-items:center;
+    color:var(--muted);font-size:12.5px;}
+  .doc-foot .mono{font-family:var(--font-mono);letter-spacing:.12em;
+    text-transform:uppercase;font-size:11px;}
+
+  @page{size:letter;margin:0;}
+  @media print{
+    html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    html,body{margin:0;padding:0;}
+    .doc{max-width:none!important;margin:0!important;}
+    .hdr-space,.ftr-space{display:table-cell;height:0.5in;}
+    .section,.item,.sec-head{break-inside:avoid;}
+    .sec-title,.item-t{break-after:avoid;}
+  }
+</style>
+</head>
+<body>
+<main class="doc">
+  <table class="doc-frame" role="presentation">
+    <thead><tr><td class="hdr-space"></td></tr></thead>
+    <tbody><tr><td>
+
+      <!-- HERO -->
+      <header class="hero">
+        <div class="hero-top">
+          <div class="hero-logo"><img src="assets/logo-gvs.png" alt="GVS"></div>
+          <div class="hero-tag">Safety Intelligence · V2.9</div>
+        </div>
+        <div class="hero-eyebrow">// Release Notes &amp; Platform Overview</div>
+        <h1>Release Notes</h1>
+        <p>A complete overview of the GVS Safety Intelligence platform — from access and language
+           support to the technical and commercial modules. Each block groups the capabilities
+           of one area of the product.</p>
+      </header>
+
+      <div class="body">
+
+        <!-- 1 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">1</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Access &amp; Security</div>
+              <h2 class="sec-title">Authentication &amp; Privacy</h2>
+              <p class="sec-lead">A local-first access layer that gates the platform and handles user data under LGPD.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">1.1</span><span class="item-t">Account creation &amp; sign-in</span><span class="item-d">Email/password sign-up and login, plus Google sign-in. The first registered account becomes the administrator.</span></div>
+            <div class="item"><span class="item-no">1.2</span><span class="item-t">LGPD consent</span><span class="item-d">Explicit consent to the Privacy Policy is required at sign-up, with the full policy available on screen.</span></div>
+            <div class="item"><span class="item-no">1.3</span><span class="item-t">Local-first storage</span><span class="item-d">User data and query history are stored locally in the device browser; in this prototype no data is sent to external servers.</span></div>
+            <div class="item"><span class="item-no">1.4</span><span class="item-t">Session persistence</span><span class="item-d">The platform remembers the signed-in user and the last screen between visits.</span></div>
+          </div>
+        </section>
+
+        <!-- 2 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">2</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Internationalization</div>
+              <h2 class="sec-title">Multilingual Platform (PT · EN · ES)</h2>
+              <p class="sec-lead">The entire platform operates in Portuguese, English and Spanish.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">2.1</span><span class="item-t">Language selection</span><span class="item-d">Switch language at any time from the selector available on the start screen — PT, EN or ES — and the whole interface updates instantly.</span></div>
+            <div class="item"><span class="item-no">2.2</span><span class="item-t">Full content translation</span><span class="item-d">Interface labels, product descriptions and certifications are localized, including the catalog item descriptions delivered per language.</span></div>
+            <div class="item"><span class="item-no">2.3</span><span class="item-t">Locale-aware formatting</span><span class="item-d">Dates, reference codes and on-screen messaging follow the conventions of each selected locale.</span></div>
+          </div>
+        </section>
+
+        <!-- 3 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">3</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Guided Configuration · Technical</div>
+              <h2 class="sec-title">Guided Equipment Configurator</h2>
+              <p class="sec-lead">A step-by-step builder that leads the user from their need to a complete, compatible respirator configuration.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">3.1</span><span class="item-t">Two entry paths</span><span class="item-d">Start <b>by activity</b> — describe where you work and get recommended lines — or <b>by product type</b> when the line is already known.</span></div>
+            <div class="item"><span class="item-no">3.2</span><span class="item-t">Activity-based recommendation</span><span class="item-d">Industrial activities are mapped to the best-suited product lines, so the catalog narrows to what actually fits the application.</span></div>
+            <div class="item"><span class="item-no">3.3</span><span class="item-t">Step-by-step flow</span><span class="item-d">A clear sequence — Line → Unit → Head-top → Sensor → Accessories — with progress indication at every step.</span></div>
+            <div class="item"><span class="item-no">3.4</span><span class="item-t">Compatibility filtering</span><span class="item-d">Only items compatible with the chosen unit and head-top are shown, preventing invalid combinations.</span></div>
+          </div>
+        </section>
+
+        <!-- 4 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">4</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Product Catalog · Technical</div>
+              <h2 class="sec-title">Lines, Head-tops &amp; Accessories</h2>
+              <p class="sec-lead">The full GVS / RPB respiratory portfolio, structured for selection.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">4.1</span><span class="item-t">Respiratory lines</span><span class="item-d">Powered air (PAPR · PX5), supplied-air and gas-detection systems organized into selectable product lines.</span></div>
+            <div class="item"><span class="item-no">4.2</span><span class="item-t">Head-top families</span><span class="item-d">Z-Link, Z4, T-Link, T200, Nova 3 and Astro — each family with its own set of models (SKUs) and variants.</span></div>
+            <div class="item"><span class="item-no">4.3</span><span class="item-t">Accessories, parts &amp; consumables</span><span class="item-d">Hundreds of items classified by type, each linked to the head-tops and units it serves.</span></div>
+            <div class="item"><span class="item-no">4.4</span><span class="item-t">Real catalog data</span><span class="item-d">Codes, descriptions, certifications and product images sourced directly from the GVS / RPB catalog.</span></div>
+          </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">5</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Media &amp; Documentation</div>
+              <h2 class="sec-title">Imagery, Video &amp; Certifications</h2>
+              <p class="sec-lead">Every product is presented with the material a buyer needs to decide.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">5.1</span><span class="item-t">Product imagery</span><span class="item-d">Each unit, head-top and accessory displays its real product photo.</span></div>
+            <div class="item"><span class="item-no">5.2</span><span class="item-t">Demo videos</span><span class="item-d">A watch-video modal is available on products that have demonstration footage.</span></div>
+            <div class="item"><span class="item-no">5.3</span><span class="item-t">Certifications</span><span class="item-d">Compliance and certification information is shown per item where applicable.</span></div>
+          </div>
+        </section>
+
+        <!-- 6 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">6</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Commercial Module</div>
+              <h2 class="sec-title">Quote Builder</h2>
+              <p class="sec-lead">The configuration is assembled into a clear proposal ready to send to GVS.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">6.1</span><span class="item-t">Configuration cart</span><span class="item-d">Add or remove items and adjust quantities, with a live item count throughout the flow.</span></div>
+            <div class="item"><span class="item-no">6.2</span><span class="item-t">Live summary</span><span class="item-d">A full review of the selected items — main product, sensors, accessories and consumables — before sending.</span></div>
+            <div class="item"><span class="item-no">6.3</span><span class="item-t">Reference code</span><span class="item-d">Each submission generates a unique reference code for tracking and follow-up.</span></div>
+          </div>
+        </section>
+
+        <!-- 7 -->
+        <section class="section">
+          <div class="sec-head">
+            <div class="sec-num">7</div>
+            <div class="sec-meta">
+              <div class="sec-eyebrow">// Lead Capture &amp; Sync · Commercial</div>
+              <h2 class="sec-title">Submission &amp; CRM Pipeline</h2>
+              <p class="sec-lead">A compliant lead-capture step records every configuration for the commercial team.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="item-no">7.1</span><span class="item-t">Contact form</span><span class="item-d">Captures name, company, role, phone, e-mail and free-text notes alongside the configuration.</span></div>
+            <div class="item"><span class="item-no">7.2</span><span class="item-t">LGPD-compliant consent</span><span class="item-d">Explicit authorization to be contacted is required before a configuration can be submitted.</span></div>
+            <div class="item"><span class="item-no">7.3</span><span class="item-t">Google Sheets integration</span><span class="item-d">Each submission is written to a Google Sheet through a secure Apps Script Web App, with write-locking and automatic retries so no lead is lost.</span></div>
+            <div class="item"><span class="item-no">7.4</span><span class="item-t">Specialist follow-up</span><span class="item-d">The recorded lead reaches a GVS specialist, who follows up with the proposal.</span></div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="doc-foot">
+        <span class="mono">GVS · Safety Intelligence</span>
+        <span>Release Notes &amp; Platform Overview · v2.9</span>
+      </div>
+
+    </td></tr></tbody>
+    <tfoot><tr><td class="ftr-space"></td></tr></tfoot>
+  </table>
+</main>
+</body>
+</html>
