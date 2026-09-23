@@ -336,6 +336,69 @@ img{display:block;max-width:100%}
   .g-bigcard-ic svg{width:64px;height:64px}
   .g-sum-media{width:84px}
 }
+/* ─────────────────────────  KIT FINDER (comercial)  ───────────────────────── */
+.kf-pad{max-width:1240px}
+.kf-layout{display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
+.kf-facets{display:flex;flex-direction:column;gap:18px}
+.kf-search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:0 14px;color:var(--dim)}
+.kf-search input{flex:1;min-width:0;font-family:inherit;font-size:16px;color:var(--text);background:none;border:none;outline:none;padding:14px 0}
+.kf-search button{color:var(--dim);display:grid;place-items:center;padding:6px}
+.kf-facet-h{display:flex;align-items:center;justify-content:space-between;font-family:var(--font-head);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:9px}
+.kf-clear1{font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--primary);font-weight:600}
+.kf-chips{display:flex;flex-wrap:wrap;gap:7px}
+.kf-chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:14.5px;font-weight:600;color:var(--text);transition:.12s}
+.kf-chip em{font-style:normal;font-size:12px;font-weight:700;color:var(--dim);background:var(--surface2);border-radius:7px;padding:1px 7px}
+.kf-chip.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.kf-chip.on em{background:rgba(255,255,255,.22);color:var(--on-primary)}
+.kf-chip:disabled{opacity:.32;cursor:default}
+.kf-results{min-width:0}
+.kf-res-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;font-family:var(--font-head);font-size:18px;color:var(--dim)}
+.kf-res-h b{color:var(--text);font-size:26px;margin-right:4px}
+.kf-reset{padding:10px 14px;font-size:14.5px}
+.kf-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.kf-pill{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--primary);border:1px solid var(--primary);border-radius:999px;padding:5px 11px}
+.kf-list{display:flex;flex-direction:column;gap:10px}
+.kf-kit{display:flex;flex-direction:column;gap:7px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow);transition:border-color .12s}
+.kf-kit:hover{border-color:color-mix(in srgb,var(--primary) 55%,var(--line))}
+.kf-kit-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kf-kit-top .g-prod-code{font-size:16px}
+.kf-kit-prod{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.kf-kit-d{font-size:14.5px;line-height:1.4;color:var(--text)}
+.kf-tags{display:flex;flex-wrap:wrap;gap:6px}
+.kf-tag{font-size:12px;font-weight:600;color:var(--dim);background:var(--surface2);border-radius:7px;padding:3px 8px}
+.kf-attrs{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-bottom:26px}
+.kf-attr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 13px;display:flex;flex-direction:column;gap:3px}
+.kf-attr span{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}
+.kf-attr b{font-family:var(--font-head);font-weight:600;font-size:16px}
+.kf-rows{display:grid;gap:8px;grid-template-columns:minmax(0,1fr);margin-bottom:24px}
+.kf-row{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px}
+.kf-row-img{width:56px;height:56px;flex-shrink:0;border-radius:10px;background:#fff;display:grid;place-items:center;color:var(--primary);overflow:hidden}
+.kf-row-img img{width:100%;height:100%;object-fit:contain;padding:4px}
+.kf-row-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.kf-row-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kf-row-d{font-size:14.5px;line-height:1.35}
+/* região + passo a passo */
+.kf-region{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:20px}
+.kf-region-b{font-family:var(--font-head);font-weight:800;font-size:15px;letter-spacing:.06em;background:var(--primary);color:var(--on-primary);border-radius:8px;padding:4px 10px}
+.kf-region-t{flex:1;min-width:0;font-size:14px;color:var(--dim)}
+.kf-crumbs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.kf-crumb{display:flex;flex-direction:column;align-items:flex-start;gap:1px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:7px 12px;text-align:left}
+.kf-crumb span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}
+.kf-crumb b{font-family:var(--font-head);font-weight:600;font-size:15px;color:var(--primary)}
+.kf-crumb.skip b{color:var(--dim);font-weight:500}
+.kf-crumb:hover{border-color:var(--primary)}
+.kf-opts{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.kf-opt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;min-height:120px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
+.kf-opt:hover{border-color:var(--primary)}
+.kf-opt:active{transform:scale(.98)}
+.kf-opt-t{font-family:var(--font-head);font-weight:700;font-size:21px;line-height:1.15}
+.kf-opt-en{font-size:13px;color:var(--dim)}
+.kf-opt-n{margin-top:auto;font-size:13.5px;font-weight:700;color:var(--primary)}
+@media (min-width:980px){
+  .kf-layout{grid-template-columns:360px minmax(0,1fr)}
+  .kf-facets{position:sticky;top:0;align-self:start;max-height:calc(100dvh - 120px);overflow-y:auto;padding-right:6px}
+  .kf-rows{grid-template-columns:1fr 1fr}
+}
 @media (prefers-reduced-motion:reduce){
   .g-float,.g-pulse,.g-blob{animation:none}
 }
@@ -351,10 +414,12 @@ img{display:block;max-width:100%}
 <script src="data/catalog.js"></script>
 <script src="data/i18n.js"></script>
 <script src="data/desc-i18n.js"></script>
+<script src="data/kits.js"></script>
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="app/icons.jsx"></script>
 <script type="text/babel" src="app/ui.jsx"></script>
 <script type="text/babel" src="app/screens.jsx"></script>
+<script type="text/babel" src="app/kitfinder.jsx"></script>
 
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback } = React;
@@ -378,7 +443,8 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "selLayout": "grid",
   "summaryStyle": "cards",
   "idleSec": 90,
-  "endpoint": ""
+  "endpoint": "",
+  "kfLayout": "wizard"
 }/*EDITMODE-END*/;
 
 const LS = {
@@ -409,6 +475,16 @@ function App(){
   const [cartOpen, setCartOpen] = useState(false);
   const [video, setVideo] = useState(null);
   const [ref, setRef] = useState(null);
+  // Modo comercial (Kit Finder): ativa com ?comercial=1, desativa com ?comercial=0. Fica salvo no aparelho.
+  const [commercial] = useState(() => {
+    const q = new URLSearchParams(location.search).get("comercial");
+    if (q === "1") LS.set("commercial", true); else if (q === "0") LS.set("commercial", false);
+    return !!LS.get("commercial", false);
+  });
+  useEffect(() => { if (commercial) setScreen((s) => s === "attract" ? "home" : s); }, [commercial]);
+  const [kitSel, setKitSel] = useState({});
+  const [kitStep, setKitStep] = useState({ skip: [] });
+  const [kit, setKit] = useState(null);
 
   const t = I[lang];
 
@@ -443,8 +519,9 @@ function App(){
 
   const restart = useCallback(() => {
     setCart({}); setActivity(null); setLine(null); setUnit(null); setUnitFam(null); setHeadFam(null); setHeadtop(null);
-    setRef(null); setHist([]); setCartOpen(false); setVideo(null); setScreen("attract");
-  }, []);
+    setRef(null); setHist([]); setCartOpen(false); setVideo(null); setKitSel({}); setKitStep({ skip: [] }); setKit(null);
+    setScreen(commercial ? "home" : "attract");
+  }, [commercial]);
 
   // ── carrinho ──
   const metaOf = (id) => C.items.find(i => i.id === id);
@@ -481,8 +558,10 @@ function App(){
   // Compatibilidade por MODELO (SKU) do headtop: itens trazem models=[SKUs] (revisão por modelo de headtop).
   // Sem headtop escolhido (linhas filtração/monitoramento) ou item sem models → não filtra por modelo.
   const modelOK = (i) => { if(!headtop) return true; if(i.models===undefined) return true; return i.models.includes(headtop.code); };
-  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory" && airOK(i) && modelOK(i)); };
-  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part" && airOK(i) && modelOK(i)); };
+  // Exclusão por atividade: item com notActs=[...] some quando a atividade escolhida está na lista.
+  const actOK = (i) => !(activity && i.notActs && i.notActs.includes(activity.id));
+  const accessories = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="accessory" && airOK(i) && modelOK(i) && actOK(i)); };
+  const parts = () => { const fams=accFams(); return C.items.filter(i=>fams.includes(i.fam) && i.kind==="part" && airOK(i) && modelOK(i) && actOK(i)); };
   // acessórios + peças do equipamento (PX5/C40) — guarda-chuva próprio, minimizado
   const unitExtras = () => {
     if(!(line && (line.id==="papr"||line.id==="sar"))) return [];
@@ -530,7 +609,7 @@ function App(){
   // ── reset por inatividade (modo quiosque) ──
   const idleRef = useRef(null);
   useEffect(() => {
-    const secs = Number(tw.idleSec)||0;
+    const secs = commercial ? 0 : (Number(tw.idleSec)||0);
     const reset = () => {
       clearTimeout(idleRef.current);
       if(secs <= 0) return;
@@ -542,7 +621,7 @@ function App(){
     evs.forEach(e=>window.addEventListener(e, reset, {passive:true}));
     reset();
     return () => { evs.forEach(e=>window.removeEventListener(e, reset)); clearTimeout(idleRef.current); };
-  }, [tw.idleSec, restart]);
+  }, [tw.idleSec, restart, commercial]);
 
   const ctx = {
     t, lang, C, tw, nav, back, restart, setLang,
@@ -552,6 +631,7 @@ function App(){
     cart, count, is, add, inc, dec, remove, clear, cartList, metaOf,
     openVideo: (p) => setVideo(p), submit, ref,
     start: () => nav("home"),
+    commercial, kitSel, setKitSel, kitStep, setKitStep, kit, setKit,
   };
 
   const SCREENS = {
@@ -559,6 +639,7 @@ function App(){
     lines: window.ScreenLines, actunits: window.ScreenActUnits, unitfam: window.ScreenUnitFam, unit: window.ScreenUnit, headfam: window.ScreenHeadFam,
     headtop: window.ScreenHeadtop, sensor: window.ScreenSensor, accessories: window.ScreenAccessories,
     summary: window.ScreenSummary, form: window.ScreenForm, success: window.ScreenSuccess,
+    kits: window.ScreenKits, kit: window.ScreenKit, kitregion: window.ScreenKitRegion,
   };
   const Screen = SCREENS[screen] || window.ScreenHome;
   const showChrome = screen !== "attract";
@@ -607,6 +688,10 @@ function App(){
           onChange={(v)=>setTweak("idleSec",v)} />
         <TweakText label="URL Apps Script" value={tw.endpoint} placeholder="https://.../exec"
           onChange={(v)=>setTweak("endpoint",v)} />
+        <TweakSection label="Kit Finder (comercial)" />
+        <TweakRadio label="Layout" value={tw.kfLayout}
+          options={[{value:"wizard",label:"Passo a passo"},{value:"facets",label:"Filtros"}]}
+          onChange={(v)=>setTweak("kfLayout",v)} />
       </TweaksPanel>
     </div>
   );

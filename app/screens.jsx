@@ -71,7 +71,17 @@
                    onClick={() => { setActivity(null); nav("activities"); }} accent />
           <BigCard icon="grid" title={t.by_product} sub={t.by_product_sub}
                    onClick={() => { setActivity(null); nav("lines"); }} />
+          {ctx.commercial && window.GVS_KITS && (
+            <BigCard icon="filter" title="Kit Finder" sub={`Modo comercial · ${window.GVS_KITS.kits.length} kits por atributo`}
+                     onClick={() => nav("kits")} />
+          )}
         </div>
+        {ctx.commercial && (
+          <button className="g-btn ghost" style={{ marginTop: 22, alignSelf: "flex-start" }}
+            onClick={() => { localStorage.setItem("gvs_commercial", "false"); location.href = location.pathname; }}>
+            <UIIcon name="left" size={18} /> Voltar ao modo feira
+          </button>
+        )}
       </div>
     );
   }
