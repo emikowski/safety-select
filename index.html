@@ -730,5 +730,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   acquire();
 })();
 </script>
+<script>
+// Cache offline: guarda o app, os dados e as fotos no tablet para abrir rápido mesmo com internet ruim.
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").then((reg) => {
+      // quando uma versão nova é publicada, recarrega uma vez sozinho
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => { if (!reloaded) { reloaded = true; location.reload(); } });
+      setInterval(() => reg.update(), 30 * 60 * 1000);
+    }).catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
