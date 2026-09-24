@@ -13,11 +13,27 @@
   window.descOf = descOf;
 
   // ── Barra superior (logo · idioma · carrinho) ──────────────────────────
+  // 5 toques rápidos no logo alternam modo feira ⇄ comercial (sem precisar editar o endereço).
+  let taps = [];
+  function logoTap(onHome) {
+    const now = Date.now();
+    taps = taps.filter((x) => now - x < 2500); taps.push(now);
+    if (taps.length >= 5) {
+      taps = [];
+      const on = localStorage.getItem("gvs_commercial") === "true";
+      localStorage.setItem("gvs_commercial", on ? "false" : "true");
+      alert(on ? "Modo feira ativado" : "Modo comercial ativado (Kit Finder)");
+      location.href = location.pathname;
+      return;
+    }
+    onHome();
+  }
+
   function Chrome({ t, lang, setLang, count, onCart, onHome, showHome }) {
     const langs = [["pt", "PT"], ["en", "EN"], ["es", "ES"]];
     return (
       <header className="g-chrome">
-        <button className="g-logo" onClick={onHome} aria-label="GVS">
+        <button className="g-logo" onClick={() => logoTap(onHome)} aria-label="GVS">
           <img className="g-logo-img" src="assets/logo-gvs.png" alt="GVS" />
           <span className="g-logo-sub">{t.powered}</span>
         </button>
